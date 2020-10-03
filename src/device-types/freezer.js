@@ -14,20 +14,20 @@ import { DeviceType } from './device-type';
 
 let instance;
 
-const type = 'action.devices.types.COOKTOP'
+const type = 'action.devices.types.FREEZER'
 
-class Cooktop extends DeviceType {
+class Freezer extends DeviceType {
   constructor() {
     super()
     this.valuesArray = [{
-      nicknames: ['Kitchen cooktop'],
+      nicknames: ['Kitchen Freezer'],
       roomHint: 'Kitchen',
     }];
   }
 
   static createDevice() {
     if (!instance) {
-      instance = new Cooktop()
+      instance = new Freezer()
     }
     const element = instance.valuesArray.shift();
 
@@ -35,70 +35,70 @@ class Cooktop extends DeviceType {
       id: instance.genUuid(),
       type,
       traits: [
-        'action.devices.traits.Cook',
-        'action.devices.traits.OnOff',
         'action.devices.traits.Modes',
+        'action.devices.traits.OnOff',
+        'action.devices.traits.TemperatureControl',
+        'action.devices.traits.Toggles',
       ],
-      defaultNames: [`Smart Cooktop`],
-      name: `Smart Cooktop`,
+      defaultNames: [`Smart Freezer`],
+      name: `Smart Freezer`,
       nicknames: instance.getNicknames(element),
       roomHint: instance.getRoomHint(element),
       attributes: {
-        supportedCookingModes: [
-          'COOK',
-          'BOIL',
-          'SAUTE',
-        ],
-        foodPresets: [{
-          food_preset_name: 'chicken',
-          supported_units: ['POUNDS', 'OUNCES'],
-          food_synonyms: [{
-            synonym: ['chicken', 'chicken breat', 'chicken thigh'],
-            lang: 'en',
-          }],
-        }, {
-          food_preset_name: 'bacon',
-          supported_units: ['POUNDS', 'OUNCES'],
-          food_synonyms: [{
-            synonym: ['bacon', 'bacon strips'],
+        availableToggles: [{
+          name: 'powerfreeze',
+          name_values: [{
+            name_synonym: ['power freeze', 'power'],
             lang: 'en',
           }],
         }],
-        maxTimerLimitSec: 1200,
-        pausable: true,
         availableModes: [{
-          name: 'heat',
-          nameValues: [{
-            nameSynonym: ['heat', 'flame', 'heat level'],
+          name: 'currentmode',
+          name_values: [{
+            name_synonym: ['current mode', 'current', 'mode'],
             lang: 'en',
           }],
           settings: [{
-            settingName: 'low',
-            settingValues: [{
-              settingSynonym: ['low', 'lowest'],
+            setting_name: 'freeze',
+            setting_values: [{
+              setting_synonym: ['Freeze'],
               lang: 'en',
             }],
           }, {
-            settingName: 'high',
-            settingValues: {
-              settingSynonym: ['high', 'full', 'highest'],
+            setting_name: 'cool',
+            setting_values: [{
+              setting_synonym: ['Cool'],
               lang: 'en',
-            },
+            }],
+          }, {
+            setting_name: 'wine',
+            setting_values: [{
+              setting_synonym: ['Wine'],
+              lang: 'en',
+            }],
+          }, {
+            setting_name: 'sabbath',
+            setting_values: [{
+              setting_synonym: ['Sabbath'],
+              lang: 'en',
+            }],
           }],
-          ordered: true,
+          ordered: false,
         }],
+        queryOnlyTemperatureControl: true,
+        temperatureUnitForUX: 'C',
       },
       willReportState: true,
       states: {
         online: true,
-        on: false,
-        currentCookingMode: 'NONE',
-        currentFoodPreset: 'NONE',
-        currentFoodQuantity: 0,
-        currentFoodUnit: 'NO_UNITS',
-        currentModeSettings: {
-          heat: 'low',
+        currentToggleSettings: {
+          powerfreeze: false,
         },
+        currentModeSettings: {
+          currentmode: 'freeze',
+        },
+        on: false,
+        temperatureSetpointCelsius: -5,
       },
       hwVersion: '1.0.0',
       swVersion: '2.0.0',
@@ -110,10 +110,10 @@ class Cooktop extends DeviceType {
 
 window.deviceTypes.push({
   type,
-  identifier: '_addCooktop',
-  icon: 'hardware:power-input',
-  label: 'Cooktop',
+  identifier: '_addFreezer',
+  icon: 'icons:check-box-outline-blank',
+  label: 'Freezer',
   function: (app) => {
-    app._createDevice(Cooktop.createDevice());
+    app._createDevice(Freezer.createDevice());
   },
 })

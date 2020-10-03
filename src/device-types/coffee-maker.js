@@ -65,7 +65,7 @@ class CoffeeMaker extends DeviceType {
           food_preset_name: 'coffee',
           supported_units: ['NO_UNITS', 'CUPS'],
           food_synonyms: [{
-            synonyms: ['coffee'],
+            synonym: ['coffee'],
             lang: 'en',
           }],
         }],
@@ -77,7 +77,7 @@ class CoffeeMaker extends DeviceType {
         currentCookingMode: 'NONE',
         currentFoodPreset: 'NONE',
         currentFoodQuantity: 0,
-        currentFoodUnit: 'NONE',
+        currentFoodUnit: 'NO_UNITS',
       },
       hwVersion: '1.0.0',
       swVersion: '2.0.0',

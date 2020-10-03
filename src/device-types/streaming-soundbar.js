@@ -1,5 +1,5 @@
 /**
- * Copyright 2019, Google, Inc.
+ * Copyright 2020, Google, Inc.
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,20 +14,20 @@ import { DeviceType } from './device-type';
 
 let instance;
 
-const type = 'action.devices.types.MICROWAVE'
+const type = 'action.devices.types.STREAMING_SOUNDBAR'
 
-class Microwave extends DeviceType {
+class StreamingSoundbar extends DeviceType {
   constructor() {
     super()
     this.valuesArray = [{
-      nicknames: ['microwave'],
-      roomHint: 'Kitchen',
+      nicknames: ['Media center streaming soundbar'],
+      roomHint: 'Living Room',
     }];
   }
 
   static createDevice() {
     if (!instance) {
-      instance = new Microwave()
+      instance = new StreamingSoundbar()
     }
     const element = instance.valuesArray.shift();
 
@@ -35,49 +35,45 @@ class Microwave extends DeviceType {
       id: instance.genUuid(),
       type,
       traits: [
-        'action.devices.traits.Cook',
-        'action.devices.traits.StartStop',
-        'action.devices.traits.Timer',
+        'action.devices.traits.MediaState',
+        'action.devices.traits.TransportControl',
+        'action.devices.traits.Volume',
       ],
-      defaultNames: [`Smart Microwave`],
-      name: `Smart Microwave`,
+      defaultNames: ['Smart Streaming Soundbar'],
+      name: 'Smart Streaming Soundbar',
       nicknames: instance.getNicknames(element),
       roomHint: instance.getRoomHint(element),
       attributes: {
-        maxTimerLimitSec: 60,
-        pausable: true,
-        supportedCookingModes: [
-          'DEFROST',
-          'MICROWAVE',
-          'WARM',
+        transportControlSupportedCommands: [
+          'NEXT', 'PREVIOUS', 'PAUSE', 'STOP', 'RESUME',
         ],
+        volumeMaxLevel: 11,
+        volumeCanMuteAndUnmute: true,
+        supportActivityState: true,
+        supportPlaybackState: true,
       },
       willReportState: true,
       states: {
         online: true,
-        timerRemainingSec: -1,
-        timerPaused: false,
-        isRunning: false,
-        isPaused: false,
-        currentCookingMode: 'NONE',
-        currentFoodPreset: 'NONE',
-        currentFoodQuantity: 0,
-        currentFoodUnit: 'NO_UNITS',
+        currentVolume: 11,
+        isMuted: false,
+        activityState: 'ACTIVE',
+        playbackState: 'STOPPED',
       },
-      hwVersion: '3.2',
-      swVersion: '11.4',
-      model: '442',
-      manufacturer: 'sirius',
+      hwVersion: '1.0.0',
+      swVersion: '2.0.0',
+      model: 'L',
+      manufacturer: 'L',
     };
   }
 }
 
 window.deviceTypes.push({
   type,
-  identifier: '_addMicrowave',
-  icon: 'device:nfc',
-  label: 'Microwave',
+  identifier: '_addStreamingSoundar',
+  icon: 'image:panorama-horizontal',
+  label: 'Streaming Soundbar',
   function: (app) => {
-    app._createDevice(Microwave.createDevice());
+    app._createDevice(StreamingSoundbar.createDevice());
   },
 })

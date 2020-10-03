@@ -1,5 +1,5 @@
 /**
- * Copyright 2019, Google, Inc.
+ * Copyright 2020, Google, Inc.
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,20 +14,20 @@ import { DeviceType } from './device-type';
 
 let instance;
 
-const type = 'action.devices.types.SOUSVIDE'
+const type = 'action.devices.types.AUDIO_VIDEO_RECEIVER'
 
-class SousVide extends DeviceType {
+class AudioVideoReceiver extends DeviceType {
   constructor() {
     super()
     this.valuesArray = [{
-      nicknames: ['My sous vide'],
-      roomHint: 'Kitchen',
+      nicknames: ['Media center receiver'],
+      roomHint: 'Living Room',
     }];
   }
 
   static createDevice() {
     if (!instance) {
-      instance = new SousVide()
+      instance = new AudioVideoReceiver()
     }
     const element = instance.valuesArray.shift();
 
@@ -35,47 +35,36 @@ class SousVide extends DeviceType {
       id: instance.genUuid(),
       type,
       traits: [
-        'action.devices.traits.Cook',
-        'action.devices.traits.StartStop',
-        'action.devices.traits.Timer',
+        'action.devices.traits.InputSelector',
+        'action.devices.traits.Volume',
       ],
-      defaultNames: [`Smart Sous Vide`],
-      name: `Smart Sous Vide`,
+      defaultNames: ['Smart Audio Video Receiver'],
+      name: 'Smart Audio Video Receiver',
       nicknames: instance.getNicknames(element),
       roomHint: instance.getRoomHint(element),
       attributes: {
-        supportedCookingModes: [
-          'SOUS_VIDE',
-        ],
-        foodPresets: [{
-          food_preset_name: 'chicken',
-          supported_units: ['POUNDS', 'OUNCES'],
-          food_synonyms: [{
-            synonym: ['chicken', 'whole chicken'],
+        availableInputs: [{
+          key: 'hdmi_1',
+          names: [{
+            name_synonym: ['hdmi 1', 'DVD player'],
             lang: 'en',
           }],
         }, {
-          food_preset_name: 'salmon',
-          supported_units: ['POUNDS', 'OUNCES'],
-          food_synonyms: [{
-            synonym: ['salmon', 'king salmon'],
+          key: 'hdmi_2',
+          names: [{
+            name_synonym: ['hdmi 2', 'TV'],
             lang: 'en',
           }],
         }],
-        maxTimerLimitSec: 30,
-        pausable: true,
+        volumeMaxLevel: 11,
+        volumeCanMuteAndUnmute: true,
       },
       willReportState: true,
       states: {
         online: true,
-        timerRemainingSec: -1,
-        timerPaused: false,
-        isRunning: false,
-        isPaused: false,
-        currentCookingMode: 'NONE',
-        currentFoodPreset: 'NONE',
-        currentFoodQuantity: 0,
-        currentFoodUnit: 'NO_UNITS',
+        currentInput: 'hdmi_1',
+        currentVolume: 11,
+        isMuted: false,
       },
       hwVersion: '1.0.0',
       swVersion: '2.0.0',
@@ -87,10 +76,10 @@ class SousVide extends DeviceType {
 
 window.deviceTypes.push({
   type,
-  identifier: '_addSousVide',
-  icon: 'device:battery-full',
-  label: 'Sous Vide',
+  identifier: '_addAudioVisualReceiver',
+  icon: 'hardware:computer',
+  label: 'Audio Video Receiver',
   function: (app) => {
-    app._createDevice(SousVide.createDevice());
+    app._createDevice(AudioVideoReceiver.createDevice());
   },
 })
